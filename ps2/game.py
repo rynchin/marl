@@ -10,7 +10,7 @@ class Node:
     player: Optional[int]
     actions: List[str]
     probs: Optional[List[float]] = None # 'chance'
-    payoff_player1: Optional[float] = None # 'terminal'
+    payoff: Optional[float] = None # 'terminal'
 
 class Game:
     def __init__(self, filename: str):
@@ -134,7 +134,7 @@ class Game:
         def val(history: str) -> float:
             n = self.nodes[history] # get node from history
             if n.kind == "terminal": # terminal node
-                return n.payoff_player1
+                return n.payoff
             if n.kind == "chance": # chance node
                 return sum(val(self.children[(history, a)]) * p for a, p in zip(n.actions, n.probs))
             infoset_name = self.infoset_of[history]
@@ -187,7 +187,7 @@ class Game:
         def val(history: str) -> float:
             n = self.nodes[history] # get node from history
             if n.kind == "terminal": # terminal node
-                return n.payoff_player1 if player == 1 else -n.payoff_player1
+                return n.payoff if player == 1 else -n.payoff
             if n.kind == "chance": # chance node
                 return sum(val(self.children[(history, a)]) * p for a, p in zip(n.actions, n.probs))
             if n.player == player:
